@@ -16,11 +16,10 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
 import org.apache.commons.lang.StringUtils;
-
 public class CutImageUtils {
 
 	/**
-	 * 计算旋转参数 make by dongxh 2017年11月1日下午3:51:29
+	 * 锟斤拷锟斤拷锟斤拷转锟斤拷锟斤拷 make by dongxh 2017锟斤拷11锟斤拷1锟斤拷锟斤拷锟斤拷3:51:29
 	 * 
 	 * @param src
 	 * @param angel
@@ -51,8 +50,8 @@ public class CutImageUtils {
 	}
 
 	/**
-	 * 调整图片角度
-	 * make by dongxh 2017年11月1日下午3:51:08
+	 * 锟斤拷锟斤拷图片锟角讹拷
+	 * make by dongxh 2017锟斤拷11锟斤拷1锟斤拷锟斤拷锟斤拷3:51:08
 	 * 
 	 * @param src
 	 * @param angel
@@ -76,8 +75,8 @@ public class CutImageUtils {
 	}
 
 	/**
-	 * 调整图片角度后写入内存 
-	 * make by dongxh 2017年11月1日下午4:31:20
+	 * 锟斤拷锟斤拷图片锟角度猴拷写锟斤拷锟节达拷 
+	 * make by dongxh 2017锟斤拷11锟斤拷1锟斤拷锟斤拷锟斤拷4:31:20
 	 * 
 	 * @param imgFile
 	 */
@@ -100,23 +99,23 @@ public class CutImageUtils {
 
 	public static void cutImage(String filePath, int x, int y, int w, int h, int angle) throws Exception {
 		
-		//先将图片进行旋转
+		//锟饺斤拷图片锟斤拷锟斤拷锟斤拷转
 		rotateImage(filePath, angle);
-		// 首先通过ImageIo中的方法，创建一个Image + InputStream到内存
+		// 锟斤拷锟斤拷通锟斤拷ImageIo锟叫的凤拷锟斤拷锟斤拷锟斤拷锟斤拷一锟斤拷Image + InputStream锟斤拷锟节达拷
 		ImageInputStream iis = ImageIO.createImageInputStream(new FileInputStream(filePath));
-		// 再按照指定格式构造一个Reader（Reader不能new的）
+		// 锟劫帮拷锟斤拷指锟斤拷锟斤拷式锟斤拷锟斤拷一锟斤拷Reader锟斤拷Reader锟斤拷锟斤拷new锟侥ｏ拷
 		Iterator it = ImageIO.getImageReadersByFormatName("jpg");
 		ImageReader imagereader = (ImageReader) it.next();
-		// 再通过ImageReader绑定 InputStream
+		// 锟斤拷通锟斤拷ImageReader锟斤拷 InputStream
 		imagereader.setInput(iis);
 
-		// 设置感兴趣的源区域。
+		// 锟斤拷锟矫革拷锟斤拷趣锟斤拷源锟斤拷锟斤拷
 		ImageReadParam par = imagereader.getDefaultReadParam();
 		par.setSourceRegion(new Rectangle(x, y, w, h));
-		// 从 reader得到BufferImage
+		// 锟斤拷 reader锟矫碉拷BufferImage
 		BufferedImage bi = imagereader.read(0, par);
 
-		// 将BuffeerImage写出通过ImageIO
+		// 锟斤拷BuffeerImage写锟斤拷通锟斤拷ImageIO
 		ImageIO.write(bi, "jpg", new File(filePath));
 
 	}
