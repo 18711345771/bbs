@@ -131,7 +131,7 @@
 										<tbody>
 											<c:forEach items="${page.rows }" var="row_c">
 												<tr>
-													<td>${row_c.view_title}</td>
+													<td><a href="<%=basePath %>bbs/root_child_article.action?id=${row_c.view_id}">${row_c.view_title}</a></td>
 													<td>${row_c.writer}</td>
 													<td>${row_c.view_datetime}</td>
 												</tr>
@@ -140,7 +140,7 @@
 									</table>
 									<div class="col-md-12 text-left">
 										<itheima:page
-											url="${pageContext.request.contextPath }/bbs/publishrootarticle.action" />
+											url="${pageContext.request.contextPath }/bbs/myfootstep.action" />
 									</div>
 								</div>
 							</div>
