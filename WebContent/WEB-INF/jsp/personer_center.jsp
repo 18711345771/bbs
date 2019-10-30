@@ -126,7 +126,7 @@
 										<tbody>
 											<c:forEach items="${page.rows}" var="row_a">
 												<tr>
-													<td>${row_a.title}</td>
+													<td><a href="<%=basePath%>bbs/root_child_article.action?id=${row_a.id}">${row_a.title}</a></td>
 													<td>${row_a.viewcount}</td>
 													<td>${row_a.replycount}</td>
 													<td>${row_a.editorNo}</td>
