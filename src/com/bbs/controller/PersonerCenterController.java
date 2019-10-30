@@ -98,6 +98,10 @@ public class PersonerCenterController {
 	@ResponseBody
 	public String deleteMyreply(Integer id){
 		Integer count =myReplyService.deleteMyreply(id);
+		MyReply myReply =myReplyService.selectMyReply(id);
+		Article root_article =articleService.selectArticleById(myReply.getReply_id());
+		root_article.setReplycount(root_article.getReplycount()+1);
+		articleService.updateArticle(root_article);
 		if(count>0){
 			return"OK";
 		}else{
