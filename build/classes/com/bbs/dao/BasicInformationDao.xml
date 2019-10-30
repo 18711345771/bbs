@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bbs.dao.BasicInformationDao">
+	<insert id="addBasicInformation"
+		parameterType="basicInformation">
+		insert into
+		t_basicinformation(userId,username,gender,birthday,address,introduce,industry,position,personallabels)
+		values(#{userId},#{username},#{gender},#{birthday},#{address},#{introduce},#{industry},#{position},#{personallabels})
+	</insert>
+	<select id="selectBasicInformation" parameterType="String"
+		resultType="basicInformation">
+		select * from t_basicinformation where username=#{username}
+	</select>
+	<update id="updateBasicInformation"
+		parameterType="basicInformation">
+		update t_basicinformation
+		<set>
+			<if test="userId!=null">userId=#{userId},</if>
+			<if test="username!=null">username=#{username},</if>
+			<if test="gender!=null">gender=#{gender},</if>
+			<if test="birthday!=null">birthday=#{birthday},</if>
+			<if test="address!=null">address=#{address},</if>
+			<if test="introduce!=null">introduce=#{introduce},</if>
+			<if test="industry!=null">industry=#{industry},</if>
+			<if test="position!=null">position=#{position},</if>
+			<if test="personallabels!=null">personallabels=#{personallabels}</if>
+		</set>
+		where username=#{username}
+	</update>
+</mapper>

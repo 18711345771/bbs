@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bbs.dao.UserDao">
+	<select id="selectUserByUsername" parameterType="String" resultType="user">
+		select * from t_user where username=#{username}
+	</select>
+	<select id="selectUserById" parameterType="Integer" resultType="user">
+		select * from t_user where id=#{id}
+	</select>
+	<select id="checkUserWithUsernameandPasswordandIdentity" parameterType="String" resultType="user">
+		select * from t_user where username=#{username} and password=#{password} and identity=#{identity}
+	</select>
+	<insert id="addOneUser" parameterType="user">
+		insert into t_user(username,password,identity,telephone,headicon) values(#{username},#{password},#{identity},#{telephone},#{headicon})
+	</insert>
+	<update id="updateUser" parameterType="user">
+		update t_user set 
+		<if test="username!=null">username=#{username},</if>
+		<if test="password!=null">password=#{password},</if>
+		<if test="identity!=null">identity=#{identity},</if>
+		<if test="telephone!=null">telephone=#{telephone},</if>
+		<if test="headicon!=null">headicon=#{headicon},</if>
+		<if test="datetime!=null">datetime=#{datetime}</if>
+	    where username=#{username}
+	</update>
+</mapper>

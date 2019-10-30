@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bbs.dao.ArticleDao">
+	<select id="selectArticleListByEditorNo" parameterType="article" resultType="article">
+		select 
+			id,
+			pid,
+			rootid,
+			editorNo,
+			b.dict_item_name type,
+			title
+		from
+			t_article a
+		<!-- 左连接查询目的 将类型序号替换为类型名称 -->	
+		left join(
+			select
+				dict_id,
+				dict_item_name
+			from
+				t_dict
+			where
+				dict_type_code='002'
+		)b on b.dict_id=a.type
+		where editorNo=#{editorNo}
+		<if test="start!=null and rows!=null">
+			limit #{start},#{rows}
+		</if>
+	</select>
+	<select id="selectArticleCountByEditorNo" parameterType="article" resultType="Integer">
+		select count(*) from t_article where editorNo=#{editorNo}
+	</select>
+	
+	<select id="selectArticleCountByPid" parameterType="Integer" resultType="Integer">
+		select count(*) from t_article where pid=#{pid}
+	</select>
+	
+	<select id="selectArticleById" parameterType="Integer" resultType="article">
+		select * from t_article where id=#{id}
+	</select>
+	
+	<select id="selectArticleListByPid" parameterType="article" resultType="article">
+		select 
+			id,
+			pid,
+			rootid,
+			editorNo,
+			b.dict_item_name type,
+			title,
+			context,
+			datatime,
+			writer,
+			wheadicon,
+			viewcount,
+			replycount,
+			isleaf
+		from
+			t_article a
+		<!-- 左连接查询目的 将类型序号替换为类型名称 -->	
+		left join(
+			select
+				dict_id,
+				dict_item_name
+			from
+				t_dict
+			where
+				dict_type_code='002'
+		)b on b.dict_id=a.type
+		where pid=#{pid}
+		<if test="start!=null and rows!=null">
+			limit #{start},#{rows}
+		</if>
+	</select>
+	
+	<select id="selectArticleCountByRootid" parameterType="Integer" resultType="Integer">
+		select count(*) from t_article where rootid=#{rootid}
+	</select>
+	
+	<select id="selectArticleListByRootid" parameterType="article" resultType="article">
+		select 
+			id,
+			pid,
+			rootid,
+			b.dict_item_name editorNo,
+			c.dict_item_name type,
+			title,
+			context,
+			datatime,
+			writer,
+			wheadicon,
+			viewcount,
+			replycount,
+			isleaf
+		from
+			t_article a
+		<!-- 左连接查询目的 将版块序号替换为版块名称 -->	
+		left join(
+			select
+				dict_id,
+				dict_item_name
+			from
+				t_dict
+			where
+				dict_type_code='001'
+		)b on b.dict_id=a.editorNo
+		<!-- 左连接查询目的 将类型序号替换为类型名称 -->	
+		left join(
+			select
+				dict_id,
+				dict_item_name
+			from
+				t_dict
+			where
+				dict_type_code='002'
+		)c on c.dict_id=a.type
+		where rootid=#{rootid}
+		<if test="start!=null and rows!=null">
+			limit #{start},#{rows}
+		</if>
+	</select>
+	
+	<insert id="addArticle" parameterType="article">
+		insert into t_article(pid,rootid,editorNo,type,title,context,datatime,writer,wheadicon,viewcount,replycount,isleaf)
+		values(#{pid},#{rootid},#{editorNo},#{type},#{title},#{context},#{datatime},#{writer},#{wheadicon},#{viewcount},#{replycount},#{isleaf})
+	</insert>
+	
+	<sql id="updateArticleWhere">
+		<set>
+			<if test="title!=null">
+				title=#{title},
+			</if>
+			<if test="editorNo!=null">
+				editorNo=#{editorNo},
+			</if>
+			<if test="context!=null">
+				context=#{context}
+			</if>
+		</set>
+	</sql>
+	<update id="updatePersonArticle" parameterType="article">
+		update t_article
+		<include refid="updateArticleWhere"/>
+		where id=#{id}
+	</update>
+	<update id="updateArticle" parameterType="article">
+		update t_article set pid=#{pid},rootid=#{rootid},editorNo=#{editorNo},type=#{type},title=#{title},context=#{context},datatime=#{datatime},writer= #{writer},wheadicon=#{wheadicon},viewcount=#{viewcount},replycount=#{replycount},isleaf=#{isleaf} where id=#{id} 
+	</update>
+	
+	<delete id="deleteArticle" parameterType="article">
+		delete from t_article where id=#{id}
+	</delete>
+	
+	<select id="selectPersonArticleList" parameterType="article" resultType="article">
+		select
+			id,
+			b.dict_item_name editorNo, 
+			title,
+			context,
+			datatime,
+			viewcount,
+			replycount
+		from
+		  	t_article a
+		left join(
+			select
+				dict_id,
+				dict_item_name
+			from 
+				t_dict
+			where
+				dict_type_code='001'
+		)b ON b.dict_id=a.editorNo
+		where writer=#{writer}
+		<if test="start!=null and rows!=null">
+			limit #{start},#{rows}
+		</if>
+	</select>
+	
+	<select id="selectPersonArticleCount" parameterType="article" resultType="Integer">
+		select count(*) from t_article where writer=#{writer}
+	</select>
+	
+		
+	<select id="selectLimitedArticleList" parameterType="article" resultType="article">
+		select 
+			title,
+			b.dict_item_name editorNo,
+			c.dict_item_name type
+		from
+			t_article a
+		left join(
+			select
+				dict_id,
+				dict_item_name
+			from
+				t_dict
+			where
+				dict_type_code='001'
+		)b on b.dict_id=a.editorNo
+		left join(
+			select
+				dict_id,
+				dict_item_name
+			from
+				t_dict
+			where
+				dict_type_code='002'
+		)c on c.dict_id=a.type
+		<where>
+			<if test="title!=null||title!=''">
+				title like concat('%',#{title},'%')
+			</if>
+			<if test="editorNo!=null||editorNo!=''">
+				or b.dict_item_name like concat('%',#{editorNo},'%')
+			</if>
+			<if test="type!=null||type!=''">
+				or c.dict_item_name like concat('%',#{type},'%')
+			</if>
+			and rootid=#{rootid}
+		</where>
+	</select>
+	<select id="selectLimitedArticleCount" parameterType="article" resultType="Integer">
+		select count(*) from t_article a
+		left join(
+			select
+				dict_id,
+				dict_item_name
+			from
+				t_dict
+			where
+				dict_type_code='001'
+		)b on b.dict_id=a.editorNo
+		left join(
+			select
+				dict_id,
+				dict_item_name
+			from
+				t_dict
+			where
+				dict_type_code='002'
+		)c on c.dict_id=a.type
+		<where>
+			<if test="title!=null||title!=''">
+				title like concat('%',#{title},'%')
+			</if>
+			<if test="editorNo!=null||editorNo!=''">
+				or b.dict_item_name like concat('%',#{editorNo},'%')
+			</if>
+			<if test="type!=null||type!=''">
+				or c.dict_item_name like concat('%',#{type},'%')
+			</if>
+			and rootid=#{rootid}
+		</where>
+	</select>
+	<select id="selectArticleListByUsername" parameterType="String" resultType="article">
+		select * from t_article where writer=#{writer}
+	</select>
+</mapper>

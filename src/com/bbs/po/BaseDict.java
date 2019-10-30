@@ -1,0 +1,69 @@
+package com.bbs.po;
+
+public class BaseDict {
+	private String dict_id;
+	private String dict_type_code;
+	private String dict_type_name;
+	private String dict_item_code;
+	private String dict_item_name;
+	private Integer dict_order;
+	private Integer dict_enable;
+	private String dict_memo;
+	
+	
+	public String getDict_id() {
+		return dict_id;
+	}
+	public void setDict_id(String dict_id) {
+		this.dict_id = dict_id;
+	}
+	public String getDict_type_code() {
+		return dict_type_code;
+	}
+	public void setDict_type_code(String dict_type_code) {
+		this.dict_type_code = dict_type_code;
+	}
+	public String getDict_type_name() {
+		return dict_type_name;
+	}
+	public void setDict_type_name(String dict_type_name) {
+		this.dict_type_name = dict_type_name;
+	}
+	public String getDict_item_code() {
+		return dict_item_code;
+	}
+	public void setDict_item_code(String dict_item_code) {
+		this.dict_item_code = dict_item_code;
+	}
+	public String getDict_item_name() {
+		return dict_item_name;
+	}
+	public void setDict_item_name(String dict_item_name) {
+		this.dict_item_name = dict_item_name;
+	}
+	public Integer getDict_order() {
+		return dict_order;
+	}
+	public void setDict_order(Integer dict_order) {
+		this.dict_order = dict_order;
+	}
+	public Integer getDict_enable() {
+		return dict_enable;
+	}
+	public void setDict_enable(Integer dict_enable) {
+		this.dict_enable = dict_enable;
+	}
+	public String getDict_memo() {
+		return dict_memo;
+	}
+	public void setDict_memo(String dict_memo) {
+		this.dict_memo = dict_memo;
+	}
+	@Override
+	public String toString() {
+		return "BaseDict [dict_id=" + dict_id + ", dict_type_code=" + dict_type_code + ", dict_type_name="
+				+ dict_type_name + ", dict_item_code=" + dict_item_code + ", dict_item_name=" + dict_item_name
+				+ ", dict_order=" + dict_order + ", dict_enable=" + dict_enable + ", dict_memo=" + dict_memo + "]";
+	}
+	
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bbs.dao.CurrentStatesDao">
+	<insert id="addCurrentStates" parameterType="currentStates">
+		insert into t_currentstates(curstatesId,userId,username,securityscores,lasttimeenter,pswstrength,mobileiden,mobileidenstate,emailiden,emailidenstate)
+		values(#{curstatesId},#{userId},#{username},#{securityscores},#{lasttimeenter},#{pswstrength},#{mobileiden},#{mobileidenstate},#{emailiden},#{emailidenstate})
+	</insert>
+	<update id="updateCurrentStates" parameterType="currentStates">
+		update t_currentstates set
+		<if test="userId!=null">userId=#{userId},</if>
+		<if test="username!=null">username=#{username},</if>
+		<if test="securityscores!=null">securityscores=#{securityscores},</if>
+		<if test="lasttimeenter!=null">lasttimeenter=#{lasttimeenter},</if>
+		<if test="pswstrength!=null">pswstrength=#{pswstrength},</if>
+		<if test="mobileiden!=null">mobileiden=#{mobileiden},</if>
+		<if test="mobileidenstate!=null">mobileidenstate=#{mobileidenstate},</if>
+		<if test="emailiden!=null">emailiden=#{emailiden},</if>
+		<if test="emailidenstate!=null">emailidenstate=#{emailidenstate}</if>
+		where username=#{username}
+	</update>
+	<select id="selectCurrentStates" parameterType="String" resultType="currentStates">
+		select * from t_currentstates where username=#{username}
+	</select>
+</mapper>

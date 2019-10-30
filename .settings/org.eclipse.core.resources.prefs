@@ -1,0 +1,17 @@
+eclipse.preferences.version=1
+encoding//WebContent/WEB-INF/jsp/CurrentStates.jsp=UTF-8
+encoding//WebContent/WEB-INF/jsp/Education_Information.jsp=UTF-8
+encoding//WebContent/WEB-INF/jsp/EmailBind.jsp=UTF-8
+encoding//src/com/bbs/controller/BasicInformationController.java=GBK
+encoding//src/com/bbs/controller/CommonArticleController.java=UTF-8
+encoding//src/com/bbs/controller/PersonerCenterController.java=GBK
+encoding//src/com/bbs/controller/UserController.java=GBK
+encoding//src/com/bbs/po=UTF-8
+encoding//src/com/bbs/po/Article.java=GBK
+encoding//src/com/bbs/po/BasicInformation.java=GBK
+encoding//src/com/bbs/po/CurrentStates.java=UTF-8
+encoding//src/com/bbs/po/MyReply.java=GBK
+encoding//src/com/bbs/utils/NavigationTag.java=GBK
+encoding//src/com/bbs/utils/NavigationTagFlyCoon.java=GBK
+encoding//src/com/bbs/utils/NavigationTagList.java=GBK
+encoding/<project>=UTF-8

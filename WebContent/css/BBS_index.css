@@ -1,0 +1,16 @@
+.pull-right{
+    top: 50%;
+    transform: translateY(-50%);
+    float: right;
+    position: absolute;
+    right: 10px;
+}
+table{
+    border: 1px solid #e5e9ee;;
+}
+table tbody tr{
+    border: 1px solid #e5e9ee;
+}
+.radio-inline{
+	display:inline
+}
