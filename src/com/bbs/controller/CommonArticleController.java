@@ -317,12 +317,16 @@ public class CommonArticleController {
 		}
 	}
 
-	@RequestMapping(value = "/bbs/deleterootarticle", method = RequestMethod.POST)
+	@RequestMapping(value = "/bbs/deleterootarticle.action", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteRootArticle(Integer id) {
 		Article article = articleService.selectArticleById(id);
+		List<Article> all_child_article=articleDao.selectArticleListByPid(article);
 		Integer count = articleService.deleteArticle(article);
 		if (count > 0) {
+			for(Article childarticle : all_child_article){
+				articleService.deleteArticle(childarticle);
+			}
 			return "OK";
 		} else {
 			return "FAIL";
