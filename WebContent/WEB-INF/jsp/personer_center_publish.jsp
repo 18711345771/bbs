@@ -121,7 +121,7 @@
 													<option value="${item.dict_id}"
 														<c:if test="${item.dict_id==publishUserArticleType }">selected</c:if>>
 														${item.dict_item_name}</option>
-												&lt; /c:forEach>
+												</c:forEach>
 											</select>
 										</div>
 										<div class="form-group" style="width: 30%;">
