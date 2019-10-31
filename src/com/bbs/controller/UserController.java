@@ -26,12 +26,14 @@ import com.bbs.po.BasicInformation;
 import com.bbs.po.ContractInformation;
 import com.bbs.po.CurrentStates;
 import com.bbs.po.EducationInformation;
+import com.bbs.po.SelectorDict;
 import com.bbs.po.User;
 import com.bbs.service.ArticleService;
 import com.bbs.service.BasicInformationService;
 import com.bbs.service.ContractInformationService;
 import com.bbs.service.CurrentStatesService;
 import com.bbs.service.EducationInformationService;
+import com.bbs.service.SelectorDictService;
 import com.bbs.service.UserService;
 import com.bbs.utils.CutImageUtils;
 import com.bbs.utils.Page;
@@ -61,6 +63,9 @@ public class UserController {
 	
 	@Autowired
 	CurrentStatesService currentStatesService;
+	
+	@Autowired
+	SelectorDictService  selectorDictService;
 	
 	@Value("${ARTICLE_EDITORNO}")
 	private String ARTICLE_EDITORNO;
@@ -252,13 +257,22 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/bbs/Education_Information.action")
-	public String toEducation_Information(HttpServletRequest req) {
+	public String toEducation_Information(HttpServletRequest req,Model model) {
 		User user=(User) req.getSession().getAttribute("UserInfo");
 		if(user!=null){
 			EducationInformation educationInfo=new EducationInformation();
 			educationInfo=educationInformationService.selectEducationInformation(user.getUsername());
 			if(educationInfo!=null){
 				req.setAttribute("educationInfo", educationInfo);
+				String provinceCode=educationInfo.getCollegeName().split("/")[0];
+				String cityCode=educationInfo.getCollegeName().split("/")[1];
+				String schoolCode=educationInfo.getCollegeName().split("/")[2];
+				SelectorDict provinceInfo=selectorDictService.selectSelectorDictByDictTypeCode(provinceCode);
+				SelectorDict cityInfo=selectorDictService.selectSelectorDictByDictTypeCode(cityCode);
+				SelectorDict schoolInfo=selectorDictService.selectSelectorDictByDictTypeCode(schoolCode);
+				model.addAttribute("provinceInfo", provinceInfo);
+				model.addAttribute("cityInfo", cityInfo);
+				model.addAttribute("schoolInfo", schoolInfo);
 			}
 		}
 		return "Education_Information";
