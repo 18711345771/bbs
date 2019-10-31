@@ -47,9 +47,15 @@
 								class="fa fa-bars"></b></a></li>
 					</ul>
 					<!--</div>-->
-					<%!boolean login_flag=false;%>
+					<%!
+						boolean login_flag=false;
+						boolean has_educate_info=false;	
+					%>
 					<%
-						EducationInformation educateinfo=(EducationInformation) request.getSession().getAttribute("educationInfo");
+						EducationInformation educateinfo=(EducationInformation) request.getAttribute("educationInfo");
+						if(educateinfo!=null){
+							has_educate_info=true;
+						}
 						User userinfo = (User) request.getSession().getAttribute("UserInfo");
 						User admininfo = (User) request.getSession().getAttribute("AdminInfo");
 						if (userinfo != null) {
@@ -164,9 +170,9 @@
 								<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;大学:</label>
 									<input type="text" name="collegeRecruitTime" class="form-control"
 										placeholder="入学时间" <%if(educateinfo!=null){%>value="<%=educateinfo.getCollegeRecTime() %>"<%} %>/>
-								<input id="province" name="province" class="form-control">
-								<input id="city" name="city" class="form-control">
-								<input id="school" name="school" class="form-control">
+								<input name="province" class="form-control " value="${provinceInfo.dict_item_name }">
+								<input name="city" class="form-control " value="${cityInfo.dict_item_name }">
+								<input name="school" class="form-control " value="${schoolInfo.dict_item_name }">
 							</div>
 							<div class="form-group form-inline">
 								<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高中:</label>
@@ -216,7 +222,7 @@
 								<div class="input-group">
 									<input type="text" id="collegeRecruitTime" name="collegeRecruitTime" class="form-control"
 										onClick="return Calendar('collegeRecruitTime');"
-										placeholder="入学时间" <%if(educateinfo!=null){%>value="<%=educateinfo.getCollegeRecTime() %>"<%} %>/> <span class="input-group-addon"><span
+										placeholder="入学时间" /> <span class="input-group-addon"><span
 										class="fa fa-calendar"></span></span>
 								</div>
 								<select id="province" name="province" class="form-control"></select>
@@ -228,35 +234,35 @@
 								<input type="text" id="highSchoolRecruitTime"
 									class="form-control" name="highSchoolRecruitTime"
 									placeholder="入学时间"
-									onClick="return Calendar('highSchoolRecruitTime');" <%if(educateinfo!=null){%>value="<%=educateinfo.getHighSchoolRecTime() %>"<%} %>/> <input
+									onClick="return Calendar('highSchoolRecruitTime');" /> <input
 									type="text" id="highSchoolName" class="form-control"
-									name="highSchoolName" placeholder="学校名称" <%if(educateinfo!=null){%>value="<%=educateinfo.getHighSchoolName()%>"<%} %>/>
+									name="highSchoolName" placeholder="学校名称" />
 							</div>
 							<div class="form-group form-inline">
 								<label>&nbsp;&nbsp;&nbsp;中专学校:</label> <input type="text"
 									id="careerSchoolRecruitTime" class="form-control"
 									name="careerSchoolRecruitTime" placeholder="入学时间"
-									onClick="return Calendar('careerSchoolRecruitTime');" <%if(educateinfo!=null){%>value="<%=educateinfo.getCareerSchoolRecTime()%>"<%} %>/> <input
+									onClick="return Calendar('careerSchoolRecruitTime');" /> <input
 									type="text" id="careerSchoolName" class="form-control"
-									name="careerSchoolName" placeholder="学校名称" <%if(educateinfo!=null){%>value="<%=educateinfo.getCareerSchoolName()%>"<%} %>/>
+									name="careerSchoolName" placeholder="学校名称" />
 							</div>
 							<div class="form-group form-inline">
 								<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;初中:</label>
 								<input type="text" id="middleSchoolRecruitTime"
 									class="form-control" name="middleSchoolRecruitTime"
 									placeholder="入学时间"
-									onClick="return Calendar('middleSchoolRecruitTime');" <%if(educateinfo!=null){%>value="<%=educateinfo.getMidSchoolRecTime()%>"<%} %>/> <input
+									onClick="return Calendar('middleSchoolRecruitTime');" /> <input
 									type="text" id="middleSchoolName" class="form-control"
-									name="middleSchoolName" placeholder="学校名称"<%if(educateinfo!=null){%>value="<%=educateinfo.getMidSchoolName() %>"<%} %> />
+									name="middleSchoolName" placeholder="学校名称"/>
 							</div>
 							<div class="form-group form-inline">
 								<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;小学:</label>
 								<input type="text" id="primarySchoolRecruitTime"
 									class="form-control" name="primarySchoolRecruitTime"
 									placeholder="入学时间"
-									onClick="return Calendar('primarySchoolRecruitTime');" <%if(educateinfo!=null){%>value="<%=educateinfo.getPriSchoolRecTime() %>"<%} %>/> <input
+									onClick="return Calendar('primarySchoolRecruitTime');"/> <input
 									type="text" id="primarySchoolName" class="form-control"
-									name="primarySchoolName" placeholder="学校名称" <%if(educateinfo!=null){%>value="<%=educateinfo.getPriSchoolName() %>"<%} %>/>
+									name="primarySchoolName" placeholder="学校名称"/>
 							</div>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<button type="button" class="btn btn-primary" onclick="saveEducationInformation()"
@@ -273,7 +279,8 @@
 <script type="text/javascript" src="<%=basePath%>js/showdate.js"></script>
 <script  type="text/javascript" >
 window.onload=function(){
-	init_show(<%=userinfo.getUsername()%>);
+	init_school();
+    init_show("<%=userinfo.getUsername()%>"); 
     var provinceArray = "";
     var provicneSelectStr = "";
     for(var i=0,len=province.length;i<len;i++){
@@ -283,9 +290,7 @@ window.onload=function(){
     $("#province").html(provicneSelectStr);
 
     var selectCity = $("#province").val();
-    alert(selectCity);
     var citylist=city[selectCity];
-    alert(citylist["a00"]);
     var cityArray = "";
     var citySelectStr = "";
     for(var i=0,len=citylist.length;i<len;i++){
@@ -345,14 +350,14 @@ window.onload=function(){
 function init_show(username){
 	$.ajax({
     	type:"POST",
-    	url:"<%=basePath%>bbs/getEducationInformation.action",
+        url:"<%=basePath%>bbs/getEducationInformation.action",
     	data:{"username":username},
     	async:false,
     	success:function(data){
     		if(data=="OK"){
-    			$(".condense_panel").eq(0).addClass("showorhide").siblings().removeClass("showorhide");
-    		}else{
     			$(".condense_panel").eq(1).addClass("showorhide").siblings().removeClass("showorhide");
+    		}else{
+    			$(".condense_panel").eq(0).addClass("showorhide").siblings().removeClass("showorhide");
     		}
     	}
     });
@@ -382,51 +387,33 @@ function show_panel(sequence){
 	function saveEducationInformation(){
 		var _login_flag=<%=login_flag%>;
 		if(_login_flag){
-			$.ajax({
-				type:"post",
-				url:'<%=basePath%>bbs/saveeducationinformation.action',
-				data:$("#educationinformationform").serialize(),
-				success:function(data){
-						$("#collegeRecruitTime").val(data.collegeRecTime);
-						var _collegeName=data.collegeName;
-						var _collegeNameStr=_collegeName.split("/");
-						$("#province").val(_collegeNameStr[0]);
-						$("#city").val(_collegeNameStr[1]);
-						$("#school").val(_collegeNameStr[2]);
-						$("#highSchoolRecruitTime").val(data.highSchoolRecTime);
-						$("#highSchoolName").val(data.highSchoolName);
-						$("#careerSchoolRecruitTime").val(data.careerSchoolRecTime);
-						$("#careerSchoolName").val(data.careerSchoolName);
-						$("#middleSchoolRecruitTime").val(data.midSchoolRecTime);
-						$("#middleSchoolName").val(data.midSchoolName);
-						$("#primarySchoolRecruitTime").val(data.priSchoolRecTime);
-						$("#primarySchoolName").val(data.priSchoolName);
-						alert("学历信息上传并保存成功！");
-				}
-			})
+			if(confirm("确定要提交吗？")){
+				$.ajax({
+					type:"post",
+					url:'<%=basePath%>bbs/saveeducationinformation.action',
+					data:$("#educationinformationform").serialize(),
+					success:function(data){
+								if(data=="OK"){
+									if(confirm("学历信息上传并保存成功！")){
+										window.location.reload();
+									}
+								}
+					}
+				})
+			}
 		}else{
 			alert("您还没有登录，请先登录！");
 		}
 	}
-	 <%-- $(document).ready(function(){
-		var educationinformation=<%=educateinfo%>;
-		if(educationinformation!=null){
-			var _collegeRecruitTime=<%=educateinfo.getCollegeRecTime()%>;
-			$("#collegeRecruitTime").val(_collegeRecruitTime);
-			var _collegeName=<%=educateinfo.getCollegeName()%>;
+ 	function init_school(){
+		var educationinformation=<%=has_educate_info%>;
+		if(educationinformation){
+			var _collegeName="<%=educateinfo.getCollegeName()%>";
 			var _collegeNameStr=_collegeName.split("/");
 			$("#province").val(_collegeNameStr[0]);
 			$("#city").val(_collegeNameStr[1]);
 			$("#school").val(_collegeNameStr[2]);
-			$("#highSchoolRecruitTime").val(<%=educateinfo.getHighSchoolRecTime()%>);
-			$("#highSchoolName").val(<%=educateinfo.getHighSchoolName()%>);
-			$("#careerSchoolRecruitTime").val(<%=educateinfo.getCareerSchoolRecTime()%>);
-			$("#careerSchoolName").val(<%=educateinfo.getCareerSchoolName()%>);
-			$("#middleSchoolRecruitTime").val(<%=educateinfo.getMidSchoolRecTime()%>);
-			$("#middleSchoolName").val(<%=educateinfo.getMidSchoolRecTime()%>);
-			$("#primarySchoolRecruitTime").val(<%=educateinfo.getPriSchoolRecTime()%>);
-			$("#primarySchoolName").val(<%=educateinfo.getPriSchoolName()%>);
-		} 
-	})--%>
+ 		} 
+ 	}
 </script>
 </html>
