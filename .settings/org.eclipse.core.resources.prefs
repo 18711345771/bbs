@@ -11,6 +11,7 @@ encoding//src/com/bbs/po/Article.java=GBK
 encoding//src/com/bbs/po/BasicInformation.java=GBK
 encoding//src/com/bbs/po/CurrentStates.java=UTF-8
 encoding//src/com/bbs/po/MyReply.java=GBK
+encoding//src/com/bbs/utils/CutImageUtils.java=UTF-8
 encoding//src/com/bbs/utils/NavigationTag.java=GBK
 encoding//src/com/bbs/utils/NavigationTagFlyCoon.java=GBK
 encoding//src/com/bbs/utils/NavigationTagList.java=GBK
