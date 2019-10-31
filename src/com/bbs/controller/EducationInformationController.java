@@ -19,7 +19,7 @@ public class EducationInformationController {
 
 	@RequestMapping("/bbs/saveeducationinformation.action")
 	@ResponseBody
-	public EducationInformation saveEducationInformation(String collegeRecruitTime, String province, String city,
+	public String saveEducationInformation(String collegeRecruitTime, String province, String city,
 			String school, String highSchoolRecruitTime, String highSchoolName, String careerSchoolRecruitTime,
 			String careerSchoolName, String middleSchoolRecruitTime, String middleSchoolName,
 			String primarySchoolRecruitTime, String primarySchoolName,HttpServletRequest req) {
@@ -35,7 +35,7 @@ public class EducationInformationController {
 		educationInformation.setCollegeRecTime(collegeRecruitTime);
 		String collegeName=province+'/'+city+'/'+school;
 		educationInformation.setCollegeName(collegeName);
-		educationInformation.setHighSchoolRecTime(careerSchoolRecruitTime);
+		educationInformation.setHighSchoolRecTime(highSchoolRecruitTime);
 		educationInformation.setHighSchoolName(highSchoolName);
 		educationInformation.setMidSchoolRecTime(middleSchoolRecruitTime);
 		educationInformation.setMidSchoolName(middleSchoolName);
@@ -50,7 +50,7 @@ public class EducationInformationController {
 		}else{
 			educationInformationService.addEducationInformation(educationInformation);
 		}
-		return educationInformation;
+		return "OK";
 	}
 	@RequestMapping("/bbs/getEducationInformation.action")
 	@ResponseBody
