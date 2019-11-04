@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bbs.dao.ExperienceDao">
+	<select id="selectExperienceByuserName" parameterType="String" resultType="experience">
+			select * from t_experience where userName=#{userName}
+	</select>
+	<insert id="insertExperienceSelective" parameterType="experience">
+			insert into t_experience
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+					<if test="userId !=null and userId!=''">userId,</if>
+					<if test="userName !=null and userName!=''">userName,</if>
+					<if test="firstTime !=null">firstTime,</if>
+					<if test="previousTime !=null">previousTime,</if>
+					<if test="recentTime !=null">recentTime,</if>
+					<if test="ipAddress !=null and ipAddress!=''">ipAddress,</if>
+					<if test="dynamicDays !=null and dynamicDays!=''">dynamicDays,</if>
+					<if test="upgradeDays !=null and upgradeDays!=''">upgradeDays,</if>
+					<if test="currentLevel !=null and currentLevel!=''">currentLevel,</if>
+			</trim>
+			<trim prefix="values(" suffix=")" suffixOverrides=",">
+					<if test="userId !=null and userId!=''">#{userId},</if>
+					<if test="userName !=null and userName!=''">#{userName},</if>
+					<if test="firstTime !=null and firstTime!=''">#{firstTime},</if>
+					<if test="previousTime !=null and previousTime!=''">#{previousTime},</if>
+					<if test="recentTime !=null and recentTime!=''">#{recentTime},</if>
+					<if test="ipAddress !=null and ipAddress!=''">#{ipAddress},</if>
+					<if test="dynamicDays !=null and dynamicDays!=''">#{dynamicDays},</if>
+					<if test="upgradeDays !=null and upgradeDays!=''">#{upgradeDays},</if>
+					<if test="currentLevel !=null and currentLevel!=''">#{currentLevel},</if>
+			</trim>
+	</insert>
+	<update id="updateExperienceSelective" parameterType="experience">
+			update t_experience
+			<set>
+				<if test="userName!=null and userName !=''">userName=#{userName},</if>
+				<if test="firstTime!=null">firstTime=#{firstTime},</if>
+				<if test="previousTime !=null">previousTime=#{previousTime},</if>
+				<if test="recentTime!=null">recentTime=#{recentTime},</if>
+				<if test="ipAddress!=null">ipAddress=#{ipAddress},</if>
+				<if test="dynamicDays!=null and dynamicDays!=''">dynamicDays=#{dynamicDays},</if>
+				<if test="upgradeDays !=null and upgradeDays!=''">upgradeDays=#{upgradeDays},</if>
+				<if test="currentLevel!=null and currentLevel !=''">currentLevel=#{currentLevel},</if>
+			</set>
+			where userId=#{userId}
+	</update> 
+</mapper>
