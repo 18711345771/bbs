@@ -383,7 +383,6 @@ function userregist(){
 	    }
 	    return true;
 	}
-    
 	var check=check();
 	if(check){
 		var safetyscores;
