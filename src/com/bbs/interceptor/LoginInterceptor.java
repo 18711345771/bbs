@@ -23,9 +23,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 		} else {
 			// 获取请求的URL
 			String url = request.getRequestURI();
-			// URL:除了登录请求外，其他的URL都进行拦截控制
+			// URL:除了登录请求、注册请求、查看根帖请求和查看子帖请求外，其他的URL都进行拦截控制
 			if (url.indexOf("/userlogin.action") >= 0 || url.indexOf("/adminlogin.action") >= 0
-					|| url.indexOf("/list.action") >= 0 || url.indexOf("/root_child_article.action") >= 0) {
+					|| url.indexOf("/list.action") >= 0 || url.indexOf("/root_child_article.action") >= 0
+					|| url.indexOf("/userregist.action") >= 0) {
 				return true;
 			}
 			// 不符合条件的给出提示信息，并转发到登录页面
