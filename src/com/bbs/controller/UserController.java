@@ -1,7 +1,10 @@
 package com.bbs.controller;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +29,7 @@ import com.bbs.po.BasicInformation;
 import com.bbs.po.ContractInformation;
 import com.bbs.po.CurrentStates;
 import com.bbs.po.EducationInformation;
+import com.bbs.po.Experience;
 import com.bbs.po.SelectorDict;
 import com.bbs.po.User;
 import com.bbs.service.ArticleService;
@@ -33,10 +37,12 @@ import com.bbs.service.BasicInformationService;
 import com.bbs.service.ContractInformationService;
 import com.bbs.service.CurrentStatesService;
 import com.bbs.service.EducationInformationService;
+import com.bbs.service.ExperienceService;
 import com.bbs.service.SelectorDictService;
 import com.bbs.service.UserService;
 import com.bbs.utils.CutImageUtils;
 import com.bbs.utils.Page;
+import com.bbs.utils.UpgradeDaysCalculatorUtils;
 
 import net.sf.json.JSONObject;
 
@@ -67,6 +73,9 @@ public class UserController {
 	@Autowired
 	SelectorDictService  selectorDictService;
 	
+	@Autowired
+	ExperienceService experienceService;
+	
 	@Value("${ARTICLE_EDITORNO}")
 	private String ARTICLE_EDITORNO;
 	@Value("${ARTICLE_TYPE}")
@@ -82,6 +91,65 @@ public class UserController {
 			// 得到一个Timestamp格式的时间，存入mysql中的时间格式“yyyy/MM/dd HH:mm:ss”
 			Timestamp timeStamp = new Timestamp(date.getTime());
 			user.setDatetime(timeStamp);
+			
+			/**
+			 * 日期：2019-11-02
+			 * 一、判断是否是第一次登录，是则记录第一次登陆时间
+			 * 否则记录最近一次登陆时间；
+			 * 二、根据登录的时间判断并更新登陆天数，即更新currentLevel字段值
+			 * 将recentTime字段的值赋值给previousTime，将此次的Date值赋值给recentTime字段
+			 */
+			Experience experience=experienceService.selectExperienceByuserName(user.getUsername());
+			Date firstTime =experience.getFirstTime();
+			//若first==null，则为第一次登录
+			if(firstTime==null){
+				experience.setFirstTime(timeStamp);
+				experience.setPreviousTime(timeStamp);
+				experience.setRecentTime(timeStamp);
+				
+				//获取本机的相关信息并保存
+				InetAddress addr = null;
+				try {
+					addr = InetAddress.getLocalHost();
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				}
+				String ipStr=addr.getHostAddress().toString();
+				experience.setIpAddress(ipStr);
+				experience.setCurrentLevel("LV1");
+				experience.setDynamicDays(1);
+				experience.setUpgradeDays(UpgradeDaysCalculatorUtils.getUpgradeDays(1));
+				experienceService.updateExperienceSelective(experience);
+			}else{
+				//获取本机的相关信息并保存
+				InetAddress addr = null;
+				try {
+					addr = InetAddress.getLocalHost();
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				}
+				String ipStr=addr.getHostAddress().toString();
+				experience.setIpAddress(ipStr);
+				
+				long interval=date.getTime()-experience.getRecentTime().getTime();
+				if(interval>=86400000){
+					experience.setDynamicDays(experience.getDynamicDays()+1);
+				}else{
+					Calendar calendar1=Calendar.getInstance();
+					calendar1.setTime(date);
+					Calendar calendar2=Calendar.getInstance();
+					calendar2.setTime(experience.getRecentTime());
+					//如果当前时间与t_experience表中recentTime字段的值不是同一天，就将活跃天数增加1
+					if(!(calendar1.get(0)==calendar2.get(0)&&calendar1.get(1)==calendar2.get(1)&&calendar1.get(6)==calendar2.get(6))){
+						experience.setDynamicDays(experience.getDynamicDays()+1);
+					}
+				}
+				experience.setCurrentLevel(UpgradeDaysCalculatorUtils.getCurrentLevel(experience.getDynamicDays()));
+				experience.setUpgradeDays(UpgradeDaysCalculatorUtils.getUpgradeDays(UpgradeDaysCalculatorUtils.getUpgradeDays(experience.getDynamicDays())));
+				experience.setPreviousTime(experience.getRecentTime());
+				experience.setRecentTime(timeStamp);
+				experienceService.updateExperienceSelective(experience);
+			}
 			session.setAttribute("UserInfo", user);
 			return "OK";
 		} else {
@@ -134,6 +202,10 @@ public class UserController {
 	@ResponseBody
 	public String userregist(Integer securityscores,String pswstrength,String r_username, String r_password, String telephone, String r_identity,
 			HttpSession session) {
+		System.out.println("securityscores: " + securityscores);
+		System.out.println("r_username: " + r_username);
+		System.out.println("telephone: " + telephone);
+		System.out.println("r_identity: " + r_identity);
 		User user1 = new User();
 		user1 = userService.selectUserByUsername(r_username);
 		if (user1 != null) {
@@ -169,6 +241,16 @@ public class UserController {
 				currentStates.setEmailiden("未绑定");
 				//在t_currentstates表中插入相关的一条记录
 				currentStatesService.addCurrentStates(currentStates);
+				
+				/**
+				 * 日期：2019-11-02
+				 * 封装Experience对象
+				 * 在t_experience表中插入相关的一条记录
+				 */
+				Experience experience=new Experience();
+				experience.setUserId(userTemp.getId());
+				experience.setUserName(userTemp.getUsername());
+				experienceService.insertExperienceSelective(experience);
 			}
 			
 			if (num > 0) {
@@ -363,7 +445,7 @@ public class UserController {
 					nameencodestr=nameencodestr+nameencode[i]+"_";
 				}
 				i--;
-				//在最后加上字节数组元素的个数
+				//在最后加上字节数组元素的个数和分隔符"_"
 				nameencodestr=nameencodestr+i+"_";
 				// 设置上传文件的保存地址目录
 				String fileUploadPath = "upload/" + nameencodestr + "/";
