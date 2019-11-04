@@ -1,7 +1,7 @@
 package com.bbs.po;
 
 public class SelectorDict {
-	private String dict_id;
+	private Integer dict_id;
 	private String dict_type_code;
 	private String dict_type_name;
 	private String dict_item_code;
@@ -9,10 +9,10 @@ public class SelectorDict {
 	private String dict_order_code;
 	private String dict_parent_code;
 	private String dict_memo;
-	public String getDict_id() {
+	public Integer getDict_id() {
 		return dict_id;
 	}
-	public void setDict_id(String dict_id) {
+	public void setDict_id(Integer dict_id) {
 		this.dict_id = dict_id;
 	}
 	public String getDict_type_code() {
