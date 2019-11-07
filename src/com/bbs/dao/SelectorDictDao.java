@@ -1,7 +1,9 @@
 package com.bbs.dao;
 
+import java.util.List;
+
 import com.bbs.po.SelectorDict;
 
 public interface SelectorDictDao {
-		public SelectorDict selectSelectorDictByDictOrderCode(String dict_order_code);
+		public List<SelectorDict> selectSelectorDictByDictTypeCode(String dict_type_code);
 }
