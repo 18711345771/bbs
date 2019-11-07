@@ -2,6 +2,8 @@
 <%@page import="com.bbs.po.EducationInformation"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
@@ -168,46 +170,63 @@
 									<form>
 							<div class="form-group form-inline">
 								<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;大学:</label>
-									<input type="text" name="collegeRecruitTime" class="form-control"
-										placeholder="入学时间" <%if(educateinfo!=null){%>value="<%=educateinfo.getCollegeRecTime() %>"<%} %>/>
-								<input name="province" class="form-control " value="${provinceInfo.dict_item_name }">
-								<input name="city" class="form-control " value="${cityInfo.dict_item_name }">
-								<input name="school" class="form-control " value="${schoolInfo.dict_item_name }">
+									<input type="text" id="showcollegeRecruitTime" class="form-control"
+										placeholder="入学时间"/>
+								<select id="showprovince" class="form-control " name="showprovince" disabled>
+										<option value="">---</option>
+										<c:forEach items="${provinceInfo }" var="row_a">
+												<option value="${row_a.dict_order_code }" <c:if test="${row_a.dict_order_code==showprovince}">selected</c:if>>
+														${row_a.dict_item_name}
+												</option>
+										</c:forEach>
+								</select>
+								<select id="showcity" class="form-control " name="showcity" disabled>
+										<option value="">---</option>
+										<c:forEach items="${cityInfo }" var="row_a">
+												<option value="${row_a.dict_order_code }" <c:if test="${row_a.dict_order_code==showcity}">selected</c:if>>
+														${row_a.dict_item_name}
+												</option>
+										</c:forEach>
+								</select>
+								<select id="showschool" class="form-control " name="showschool" disabled>
+										<option value="">---</option>
+										<c:forEach items="${schoolInfo }" var="row_a">
+												<option value="${row_a.dict_order_code }" <c:if test="${row_a.dict_order_code==showschool}">selected</c:if>>
+														${row_a.dict_item_name}
+												</option>
+										</c:forEach>
+								</select>
 							</div>
 							<div class="form-group form-inline">
 								<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高中:</label>
 								<input type="text"
-									class="form-control" name="highSchoolRecruitTime"
-									placeholder="入学时间"
-									<%if(educateinfo!=null){%>value="<%=educateinfo.getHighSchoolRecTime() %>"<%} %>/> <input
-									type="text" id="highSchoolName" class="form-control"
-									name="highSchoolName" placeholder="学校名称" <%if(educateinfo!=null){%>value="<%=educateinfo.getHighSchoolName()%>"<%} %>/>
+									class="form-control" id="showhighSchoolRecruitTime"
+									placeholder="入学时间"/> <input
+									type="text" class="form-control"
+									id="showhighSchoolName" placeholder="学校名称"/>
 							</div>
 							<div class="form-group form-inline">
 								<label>&nbsp;&nbsp;&nbsp;中专学校:</label> <input type="text"
 									 class="form-control"
-									name="careerSchoolRecruitTime" placeholder="入学时间"
-									<%if(educateinfo!=null){%>value="<%=educateinfo.getCareerSchoolRecTime()%>"<%} %>/> <input
-									type="text" id="careerSchoolName" class="form-control"
-									name="careerSchoolName" placeholder="学校名称" <%if(educateinfo!=null){%>value="<%=educateinfo.getCareerSchoolName()%>"<%} %>/>
+									id="showcareerSchoolRecruitTime" placeholder="入学时间"/> <input
+									type="text" class="form-control"
+									id="showcareerSchoolName" placeholder="学校名称"/>
 							</div>
 							<div class="form-group form-inline">
 								<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;初中:</label>
 								<input type="text"
-									class="form-control" name="middleSchoolRecruitTime"
-									placeholder="入学时间"
-									" <%if(educateinfo!=null){%>value="<%=educateinfo.getMidSchoolRecTime()%>"<%} %>/> <input
-									type="text" id="middleSchoolName" class="form-control"
-									name="middleSchoolName" placeholder="学校名称"<%if(educateinfo!=null){%>value="<%=educateinfo.getMidSchoolName() %>"<%} %> />
+									class="form-control" id="showmiddleSchoolRecruitTime"
+									placeholder="入学时间"/> <input
+									type="text"class="form-control"
+									id="showmiddleSchoolName" placeholder="学校名称" />
 							</div>
 							<div class="form-group form-inline">
 								<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;小学:</label>
 								<input type="text"
-									class="form-control" name="primarySchoolRecruitTime"
-									placeholder="入学时间"
-									<%if(educateinfo!=null){%>value="<%=educateinfo.getPriSchoolRecTime() %>"<%} %>/> <input
+									class="form-control" id="showprimarySchoolRecruitTime"
+									placeholder="入学时间"/> <input
 									type="text"  class="form-control"
-									name="primarySchoolName" placeholder="学校名称" <%if(educateinfo!=null){%>value="<%=educateinfo.getPriSchoolName() %>"<%} %>/>
+									id="showprimarySchoolName" placeholder="学校名称"/>
 							</div>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<button type="button" class="btn btn-primary" onclick="show_panel(0)"
@@ -279,7 +298,6 @@
 <script type="text/javascript" src="<%=basePath%>js/showdate.js"></script>
 <script  type="text/javascript" >
 window.onload=function(){
-	init_school();
     init_show("<%=userinfo.getUsername()%>"); 
     var provinceArray = "";
     var provicneSelectStr = "";
@@ -347,14 +365,29 @@ window.onload=function(){
         $("#school").html(schoolUlStr);
     });
 }
+
 function init_show(username){
 	$.ajax({
     	type:"POST",
         url:"<%=basePath%>bbs/getEducationInformation.action",
     	data:{"username":username},
-    	async:false,
     	success:function(data){
-    		if(data=="OK"){
+    		if(data!=null){
+    			$("#showcollegeRecruitTime").val(data.collegeRecTime);
+    			var showprovincestr=data.collegeName?data.collegeName.split("/")[0]:"";
+    			var showcitystr=data.collegeName?data.collegeName.split("/")[1]:"";
+    			var showschoolstr=data.collegeName?data.collegeName.split("/")[2]:"";
+    			$("#showprovince").val(showprovincestr);
+    			$("#showcity").val(showcitystr);
+    			$("#showschool").val(showschoolstr);
+    			$("#showhighSchoolRecruitTime").val(data.highSchoolRecTime);
+    			$("#showhighSchoolName").val(data.highSchoolName);
+    			$("#showcareerSchoolRecruitTime").val(data.careerSchoolRecTime);
+    			$("#showcareerSchoolName").val(data.careerSchoolName);
+    			$("#showmiddleSchoolRecruitTime").val(data.midSchoolRecTime);
+    			$("#showmiddleSchoolName").val(data.midSchoolName);
+    			$("#showprimarySchoolRecruitTime").val(data.priSchoolRecTime);
+    			$("#showprimarySchoolName").val(data.priSchoolName);
     			$(".condense_panel").eq(1).addClass("showorhide").siblings().removeClass("showorhide");
     		}else{
     			$(".condense_panel").eq(0).addClass("showorhide").siblings().removeClass("showorhide");
@@ -405,15 +438,6 @@ function show_panel(sequence){
 			alert("您还没有登录，请先登录！");
 		}
 	}
- 	function init_school(){
-		var educationinformation=<%=has_educate_info%>;
-		if(educationinformation){
-			var _collegeName="<%=educateinfo.getCollegeName()%>";
-			var _collegeNameStr=_collegeName.split("/");
-			$("#province").val(_collegeNameStr[0]);
-			$("#city").val(_collegeNameStr[1]);
-			$("#school").val(_collegeNameStr[2]);
- 		} 
- 	}
+
 </script>
 </html>
