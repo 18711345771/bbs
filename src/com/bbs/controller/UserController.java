@@ -57,25 +57,25 @@ public class UserController {
 
 	@Autowired
 	BaseDictDao baseDictDao;
-	
+
 	@Autowired
 	BasicInformationService basicInformationService;
-	
+
 	@Autowired
 	ContractInformationService contractInformationService;
 
 	@Autowired
-	EducationInformationService educationInformationService; 
-	
+	EducationInformationService educationInformationService;
+
 	@Autowired
 	CurrentStatesService currentStatesService;
-	
+
 	@Autowired
-	SelectorDictService  selectorDictService;
-	
+	SelectorDictService selectorDictService;
+
 	@Autowired
 	ExperienceService experienceService;
-	
+
 	@Value("${ARTICLE_EDITORNO}")
 	private String ARTICLE_EDITORNO;
 	@Value("${ARTICLE_TYPE}")
@@ -91,58 +91,61 @@ public class UserController {
 			// 得到一个Timestamp格式的时间，存入mysql中的时间格式“yyyy/MM/dd HH:mm:ss”
 			Timestamp timeStamp = new Timestamp(date.getTime());
 			user.setDatetime(timeStamp);
-			
+
 			/**
-			 * 日期：2019-11-02
-			 * 一、判断是否是第一次登录，是则记录第一次登陆时间
-			 * 否则记录最近一次登陆时间；
+			 * 日期：2019-11-02 一、判断是否是第一次登录，是则记录第一次登陆时间 否则记录最近一次登陆时间；
 			 * 二、根据登录的时间判断并更新登陆天数，即更新currentLevel字段值
 			 * 将recentTime字段的值赋值给previousTime，将此次的Date值赋值给recentTime字段
 			 */
-			Experience experience=experienceService.selectExperienceByuserName(user.getUsername());
-			Date firstTime =experience.getFirstTime();
-			//若first==null，则为第一次登录
-			if(firstTime==null){
+			Experience experience = experienceService.selectExperienceByuserName(user.getUsername());
+			Date firstTime = experience.getFirstTime();
+			// 若first==null，则为第一次登录
+			if (firstTime == null) {
 				experience.setFirstTime(timeStamp);
 				experience.setPreviousTime(timeStamp);
 				experience.setRecentTime(timeStamp);
-				
-				//获取本机的相关信息并保存
+
+				// 获取本机的相关信息并保存
 				InetAddress addr = null;
 				try {
 					addr = InetAddress.getLocalHost();
 				} catch (UnknownHostException e) {
 					e.printStackTrace();
 				}
-				String ipStr=addr.getHostAddress().toString();
+				String ipStr = addr.getHostAddress().toString();
 				experience.setIpAddress(ipStr);
 				experience.setCurrentLevel("LV1");
 				experience.setDynamicDays(1);
 				experience.setUpgradeDays(UpgradeDaysCalculatorUtils.getUpgradeDays(1));
 				experienceService.updateExperienceSelective(experience);
-			}else{
-				//获取本机的相关信息并保存
+			} else {
+				// 获取本机的相关信息并保存
 				InetAddress addr = null;
 				try {
 					addr = InetAddress.getLocalHost();
 				} catch (UnknownHostException e) {
 					e.printStackTrace();
 				}
-				String ipStr=addr.getHostAddress().toString();
+				String ipStr = addr.getHostAddress().toString();
 				experience.setIpAddress(ipStr);
-				
-				long interval=date.getTime()-experience.getRecentTime().getTime();
-				if(interval>=86400000){
-					experience.setDynamicDays(experience.getDynamicDays()+1);
-				}else{
-					Calendar calendar1=Calendar.getInstance();
+
+				long interval = date.getTime() - experience.getRecentTime().getTime();
+				if (interval >= 86400000) {
+					experience.setDynamicDays(experience.getDynamicDays() + 1);
+				} else {
+					Calendar calendar1 = Calendar.getInstance();
 					calendar1.setTime(date);
-					Calendar calendar2=Calendar.getInstance();
+					Calendar calendar2 = Calendar.getInstance();
 					calendar2.setTime(experience.getRecentTime());
-					//如果当前时间与t_experience表中recentTime字段的值不是同一天，就将活跃天数增加1
-					System.out.println("1---"+calendar1.get(Calendar.YEAR)+"---"+calendar2.get(Calendar.YEAR)+"  2---"+(calendar1.get(Calendar.MONTH)+1)+"---"+(calendar2.get(Calendar.MONTH)+1)+"  3---"+calendar1.get(Calendar.DATE)+"---"+calendar2.get(Calendar.DATE));
-					if(!(calendar1.get(Calendar.YEAR)==calendar2.get(Calendar.YEAR)&&(calendar1.get(Calendar.MONTH)+1)==(calendar2.get(Calendar.MONTH)+1)&&calendar1.get(Calendar.DATE)==calendar2.get(Calendar.DATE))){
-						experience.setDynamicDays(experience.getDynamicDays()+1);
+					// 如果当前时间与t_experience表中recentTime字段的值不是同一天，就将活跃天数增加1
+					System.out.println(
+							"1---" + calendar1.get(Calendar.YEAR) + "---" + calendar2.get(Calendar.YEAR) + "  2---"
+									+ (calendar1.get(Calendar.MONTH) + 1) + "---" + (calendar2.get(Calendar.MONTH) + 1)
+									+ "  3---" + calendar1.get(Calendar.DATE) + "---" + calendar2.get(Calendar.DATE));
+					if (!(calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR)
+							&& (calendar1.get(Calendar.MONTH) + 1) == (calendar2.get(Calendar.MONTH) + 1)
+							&& calendar1.get(Calendar.DATE) == calendar2.get(Calendar.DATE))) {
+						experience.setDynamicDays(experience.getDynamicDays() + 1);
 					}
 				}
 				experience.setCurrentLevel(UpgradeDaysCalculatorUtils.getCurrentLevel(experience.getDynamicDays()));
@@ -201,8 +204,8 @@ public class UserController {
 
 	@RequestMapping(value = "/bbs/userregist.action", method = RequestMethod.POST)
 	@ResponseBody
-	public String userregist(Integer securityscores,String pswstrength,String r_username, String r_password, String telephone, String r_identity,
-			HttpSession session) {
+	public String userregist(Integer securityscores, String pswstrength, String r_username, String r_password,
+			String telephone, String r_identity, HttpSession session) {
 		System.out.println("securityscores: " + securityscores);
 		System.out.println("r_username: " + r_username);
 		System.out.println("telephone: " + telephone);
@@ -217,20 +220,20 @@ public class UserController {
 			user2.setUsername(r_username);
 			user2.setPassword(r_password);
 			user2.setTelephone(telephone);
-			if("common".equals(r_identity)){
+			if ("common".equals(r_identity)) {
 				user2.setHeadicon("upload/beauty.png");
-			}else if("admin".equals(r_identity)){
+			} else if ("admin".equals(r_identity)) {
 				user2.setHeadicon("upload/flycoon.jpg");
 			}
-			
+
 			user2.setIdentity(r_identity);
 			Integer num = userService.addOneUser(user2);
-			
-			if("common".equals(r_identity)){
-				//封装CurrentStates对象
-				User userTemp=new User();
-				userTemp=userService.selectUserByUsername(r_username);
-				CurrentStates currentStates=new CurrentStates();
+
+			if ("common".equals(r_identity)) {
+				// 封装CurrentStates对象
+				User userTemp = new User();
+				userTemp = userService.selectUserByUsername(r_username);
+				CurrentStates currentStates = new CurrentStates();
 				currentStates.setUserId(userTemp.getId());
 				currentStates.setUsername(r_username);
 				currentStates.setSecurityscores(securityscores);
@@ -240,20 +243,18 @@ public class UserController {
 				currentStates.setLasttimeenter("上次登陆时间地址待核实中...");
 				currentStates.setEmailidenstate(0);
 				currentStates.setEmailiden("未绑定");
-				//在t_currentstates表中插入相关的一条记录
+				// 在t_currentstates表中插入相关的一条记录
 				currentStatesService.addCurrentStates(currentStates);
-				
+
 				/**
-				 * 日期：2019-11-02
-				 * 封装Experience对象
-				 * 在t_experience表中插入相关的一条记录
+				 * 日期：2019-11-02 封装Experience对象 在t_experience表中插入相关的一条记录
 				 */
-				Experience experience=new Experience();
+				Experience experience = new Experience();
 				experience.setUserId(userTemp.getId());
 				experience.setUserName(userTemp.getUsername());
 				experienceService.insertExperienceSelective(experience);
 			}
-			
+
 			if (num > 0) {
 				return "OK";
 			} else {
@@ -279,6 +280,7 @@ public class UserController {
 		// 重定向到登录页面的跳转方法
 		return "OK";
 	}
+
 	@RequestMapping(value = "/bbs/autologout.action", method = RequestMethod.GET)
 	public String autologout(HttpSession session) {
 		session.removeAttribute("UserInfo");
@@ -301,71 +303,60 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/bbs/Basic_Information.action")
-	public String toBasic_Information(String industry,Model model,HttpServletRequest req) {
-		
-		User user=(User) req.getSession().getAttribute("UserInfo");
-		if(user!=null) {
-			BasicInformation basicInformation=basicInformationService.selectBasicInformation(user.getUsername());
-			if(basicInformation!=null){
-				req.setAttribute("basicInfo", basicInformation);
-			}
+	public String toBasic_Information(String industry, Model model, HttpServletRequest req) {
+
+		User user = (User) req.getSession().getAttribute("UserInfo");
+		if (user != null) {
+			List<BaseDict> industryinfo = baseDictDao.findBaseDictListWithTypeCode("003");
+			model.addAttribute("industryinfo", industryinfo);
+			model.addAttribute("industry", industry);
 		}
-		
-		List<BaseDict> industryinfo = baseDictDao.findBaseDictListWithTypeCode("003");
-		model.addAttribute("industryinfo",industryinfo);
-		model.addAttribute("industry",industry);
 		return "Basic_Information";
 	}
 
 	@RequestMapping(value = "/bbs/Contract_Information.action")
 	public String toContract_Information(HttpServletRequest req) {
-		User user=(User) req.getSession().getAttribute("UserInfo");
-		if(user!=null) {
-			ContractInformation ContractInfo=contractInformationService.selectContractInformation(user.getUsername());
-			if(ContractInfo!=null){
-				req.setAttribute("ContractInfo", ContractInfo);
-			}
+		User user = (User) req.getSession().getAttribute("UserInfo");
+		if (user != null) {
+			ContractInformation ContractInfo = contractInformationService.selectContractInformation(user.getUsername());
+			req.setAttribute("ContractInfo", ContractInfo);
 		}
 		return "Contract_Information";
 	}
 
 	@RequestMapping(value = "/bbs/CurrentStates.action")
 	public String toCurrentStates(HttpServletRequest req) {
-		User user=(User)req.getSession().getAttribute("UserInfo");
-		if(user!=null) {
-			CurrentStates currentStates=currentStatesService.selectCurrentStates(user.getUsername());
+		User user = (User) req.getSession().getAttribute("UserInfo");
+		if (user != null) {
+			CurrentStates currentStates = currentStatesService.selectCurrentStates(user.getUsername());
 			req.setAttribute("currentStates", currentStates);
 		}
 		return "CurrentStates";
 	}
 
 	@RequestMapping(value = "/bbs/Education_Information.action")
-	public String toEducation_Information(HttpServletRequest req,Model model) {
-		User user=(User) req.getSession().getAttribute("UserInfo");
-		if(user!=null){
-			EducationInformation educationInfo=new EducationInformation();
-			educationInfo=educationInformationService.selectEducationInformation(user.getUsername());
-			if(educationInfo!=null){
-				req.setAttribute("educationInfo", educationInfo);
-				String provinceCode=educationInfo.getCollegeName().split("/")[0];
-				String cityCode=educationInfo.getCollegeName().split("/")[1];
-				String schoolCode=educationInfo.getCollegeName().split("/")[2];
-				SelectorDict provinceInfo=selectorDictService.selectSelectorDictByDictTypeCode(provinceCode);
-				SelectorDict cityInfo=selectorDictService.selectSelectorDictByDictTypeCode(cityCode);
-				SelectorDict schoolInfo=selectorDictService.selectSelectorDictByDictTypeCode(schoolCode);
-				model.addAttribute("provinceInfo", provinceInfo);
-				model.addAttribute("cityInfo", cityInfo);
-				model.addAttribute("schoolInfo", schoolInfo);
-			}
+	public String toEducation_Information(String showprovince, String showcity, String showschool,
+			HttpServletRequest req, Model model) {
+		User user = (User) req.getSession().getAttribute("UserInfo");
+		if (user != null) {
+			List<SelectorDict> provinceInfo = selectorDictService.selectSelectorDictByDictTypeCode("001");
+			List<SelectorDict> cityInfo = selectorDictService.selectSelectorDictByDictTypeCode("002");
+			List<SelectorDict> schoolInfo = selectorDictService.selectSelectorDictByDictTypeCode("003");
+			model.addAttribute("provinceInfo", provinceInfo);
+			model.addAttribute("cityInfo", cityInfo);
+			model.addAttribute("schoolInfo", schoolInfo);
+			model.addAttribute("showprovince", showprovince);
+			model.addAttribute("showcity", showcity);
+			model.addAttribute("showschool", showschool);
 		}
 		return "Education_Information";
 	}
 
 	@RequestMapping(value = "/bbs/EmailBind.action")
 	public String toEmailBind(HttpServletRequest req) {
-		User user=(User)req.getSession().getAttribute("UserInfo");
-		if(user!=null) {
-			CurrentStates currentStates=currentStatesService.selectCurrentStates(user.getUsername());
+		User user = (User) req.getSession().getAttribute("UserInfo");
+		if (user != null) {
+			CurrentStates currentStates = currentStatesService.selectCurrentStates(user.getUsername());
 			req.setAttribute("currentStates", currentStates);
 		}
 		return "EmailBind";
@@ -378,16 +369,16 @@ public class UserController {
 
 	@RequestMapping(value = "/bbs/MobileBindQuestion.action")
 	public String toMobileBindQuestion(HttpServletRequest req) {
-		User user=(User)req.getSession().getAttribute("UserInfo");
-		if(user!=null) {
-			CurrentStates currentStates=currentStatesService.selectCurrentStates(user.getUsername());
+		User user = (User) req.getSession().getAttribute("UserInfo");
+		if (user != null) {
+			CurrentStates currentStates = currentStatesService.selectCurrentStates(user.getUsername());
 			req.setAttribute("currentStates", currentStates);
 		}
 		return "MobileBindQuestion";
 	}
-	
-	@RequestMapping(value="/bbs/MobileBind.action")
-	public String toMobileBind(){
+
+	@RequestMapping(value = "/bbs/MobileBind.action")
+	public String toMobileBind() {
 		return "MobileBind";
 	}
 
@@ -395,22 +386,23 @@ public class UserController {
 	public String toPasswordUpdate() {
 		return "PasswordUpdate";
 	}
+
 	@RequestMapping(value = "/bbs/PasswordDoUpdate.action")
 	@ResponseBody
-	public String toPasswordUpdate(String oldPassword,String newPassword,HttpServletRequest req) {
-		User user=(User)req.getSession().getAttribute("UserInfo");
-		if(user!=null&&oldPassword.equals(user.getPassword())){
-			User userTemp=new User();
+	public String toPasswordUpdate(String oldPassword, String newPassword, HttpServletRequest req) {
+		User user = (User) req.getSession().getAttribute("UserInfo");
+		if (user != null && oldPassword.equals(user.getPassword())) {
+			User userTemp = new User();
 			userTemp.setUsername(user.getUsername());
 			userTemp.setPassword(newPassword);
 			userTemp.setIdentity(user.getIdentity());
 			userTemp.setTelephone(user.getTelephone());
 			userTemp.setHeadicon(user.getHeadicon());
 			userTemp.setDatetime(user.getDatetime());
-			Integer count=userService.updateUser(userTemp);
-			if(count>0){
+			Integer count = userService.updateUser(userTemp);
+			if (count > 0) {
 				return "OK";
-			}else{
+			} else {
 				return "FAIL";
 			}
 		}
@@ -439,18 +431,18 @@ public class UserController {
 				HttpSession session = request.getSession();
 				User user = (User) session.getAttribute("UserInfo");
 				String name = user.getUsername();
-				byte[] nameencode=name.getBytes("UTF-8");
-				String nameencodestr="";
-				int i=0;
-				for(i=0;i<nameencode.length;i++){
-					nameencodestr=nameencodestr+nameencode[i]+"_";
+				byte[] nameencode = name.getBytes("UTF-8");
+				String nameencodestr = "";
+				int i = 0;
+				for (i = 0; i < nameencode.length; i++) {
+					nameencodestr = nameencodestr + nameencode[i] + "_";
 				}
 				i--;
-				//在最后加上字节数组元素的个数和分隔符"_"
-				nameencodestr=nameencodestr+i+"_";
+				// 在最后加上字节数组元素的个数和分隔符"_"
+				nameencodestr = nameencodestr + i + "_";
 				// 设置上传文件的保存地址目录
 				String fileUploadPath = "upload/" + nameencodestr + "/";
-				dirPath = request.getServletContext().getRealPath("/" + fileUploadPath)+"\\";
+				dirPath = request.getServletContext().getRealPath("/" + fileUploadPath) + "\\";
 				File filePath = new File(dirPath);
 				// 如果保存文件的地址不存在，就先创建目录，否则将目录下已经存在的所有文件先删除以避免不用的头像图片占用服务器内存
 				if (!filePath.exists()) {
@@ -473,9 +465,9 @@ public class UserController {
 				usertemp.setDatetime(user.getDatetime());
 				usertemp.setHeadicon(fileUploadPath + newFilename);
 				userService.updateUser(usertemp);
-				
-				List<Article> articles=articleService.selectArticleListByUsername(name);
-				for(Article article : articles){
+
+				List<Article> articles = articleService.selectArticleListByUsername(name);
+				for (Article article : articles) {
 					article.setWheadicon(fileUploadPath + newFilename);
 					articleService.updateArticle(article);
 				}
