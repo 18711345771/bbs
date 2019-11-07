@@ -1,5 +1,7 @@
 package com.bbs.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +14,8 @@ public class SelectorDictServiceImpl implements SelectorDictService {
 	@Autowired
 	SelectorDictDao selectorDictDao;
 	@Override
-	public SelectorDict selectSelectorDictByDictTypeCode(String dict_order_code) {
-		return selectorDictDao.selectSelectorDictByDictOrderCode(dict_order_code);
+	public List<SelectorDict> selectSelectorDictByDictTypeCode(String dict_type_code) {
+		return selectorDictDao.selectSelectorDictByDictTypeCode(dict_type_code);
 	}
 
 }
