@@ -1,5 +1,7 @@
 package com.bbs.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +24,7 @@ public class BasicInformationController {
 
 	@RequestMapping("/bbs/savebasicinformation.action")
 	@ResponseBody
-	public BasicInformation uploadBasicInformation(@RequestParam("userName") String username,
+	public String uploadBasicInformation(@RequestParam("userName") String username,
 			@RequestParam("genderoptions") String gender, @RequestParam("birthday") String birthday,
 			@RequestParam("country") String country, @RequestParam("province") String province,
 			@RequestParam("city") String city, @RequestParam("introduce") String introduce,
@@ -59,6 +61,13 @@ public class BasicInformationController {
 		} else {
 			basicInformationService.addBasicInformation(basicInformation);
 		}
+		return "OK";
+	}
+	@RequestMapping(value="/bbs/getbasicinformation.action")
+	@ResponseBody
+	public BasicInformation getBasicInformation(HttpServletRequest req){
+		User user=(User) req.getSession().getAttribute("UserInfo");
+		BasicInformation basicInformation=basicInformationService.selectBasicInformation(user.getUsername());
 		return basicInformation;
 	}
 }
