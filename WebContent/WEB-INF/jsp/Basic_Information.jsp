@@ -25,7 +25,11 @@
 <link href="<%=basePath%>bootstrap/css/sb-admin-2.css" rel="stylesheet">
 <link href="<%=basePath%>bootstrap/css/font-awesome.min.css"
 	rel="stylesheet">
-
+<style type="text/css">
+        .showorhide{
+            display: none;
+        }
+    </style>
 <script type="text/javascript"
 	src="<%=basePath%>js/chosen.jquery.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>js/area_chs.js"></script>
@@ -62,7 +66,6 @@
 					</ul>
 					<!--</div>-->
 					<%
-						BasicInformation basicinfo = (BasicInformation) request.getAttribute("basicInfo");
 						User userinfo = (User) request.getSession().getAttribute("UserInfo");
 						User admininfo = (User) request.getSession().getAttribute("AdminInfo");
 						if (userinfo != null) {
@@ -169,8 +172,9 @@
 				<!-- /.row -->
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<form id="basicinformationform">
-							<div class="form-group form-inline">
+						<div class="condense_panel">
+								<form id="showbasicinformationform">
+								<div class="form-group form-inline">
 								<label for="userName">&nbsp;&nbsp;&nbsp;用户名:</label> <input
 									type="text" id="userName" class="form-control"
 									<%if(userinfo!=null){%> value="${UserInfo.getUsername()}"
@@ -181,23 +185,17 @@
 								<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;性别:</label>
 								<div class="radio-inline">
 									<label> <input type="radio" name="genderoptions"
-										id="gender0" value="secret"
-										<%if (basicinfo != null &&"secret".equals(basicinfo.getGender())) {%>
-										checked <%}%>>保密
+										id="showgender0" value="secret">保密
 									</label>
 								</div>
 								<div class="radio-inline">
 									<label> <input type="radio" name="genderoptions"
-										id="gender1" value="male"
-										<%if (basicinfo != null && "male".equals(basicinfo.getGender())) {%>
-										checked <%}%>>男
+										id="showgender1" value="male">男
 									</label>
 								</div>
 								<div class="radio-inline">
 									<label> <input type="radio" name="genderoptions"
-										id="gender2" value="female"
-										<%if (basicinfo != null && "female".equals(basicinfo.getGender())) {%>
-										checked <%}%>>女
+										id="showgender2" value="female">女
 									</label>
 								</div>
 							</div>
@@ -205,9 +203,76 @@
 								<div class="membder-background addMemo-body">
 									<div class="addMemo" id="iframe">
 										<label>出生日期:</label><input class="form-control" type="text"
-											<%if (basicinfo != null) {%>
-											value="<%=basicinfo.getBirthday()%>"<%} else {%>
-											value="2019-9-27" <%}%> name="birthday" id="J-xl" />
+											 name="birthday" id="showJ-xl" />
+										<div class="clear-both"></div>
+										<iframe src="<%=basePath%>html/iframe.jsp" width="100%"
+											height="600" id="iframepage" name="iframe" frameborder="0"
+											scrolling="no" marginheight="0" marginwidth="0"></iframe>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label>现居住地:</label> <select id="showcountry" name="showcountry"
+									class="dept_select"></select> <select id="showprovince"
+									name="showprovince" class="dept_select"></select> <select id="showcity"
+									name="showcity" class="dept_select"></select>
+							</div>
+							<div class="form-group form-inline">
+								<label for="showintroduce">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;简介:</label>
+								<input name="showintroduce" type="text" id="showintroduce"
+									class="form-control" placeholder="一句话介绍一下自己吧，让别人更了解你"
+									style="min-width: 358px;" />
+							</div>
+							<div class="form-group form-inline">
+								<label for="showindustry">行业分类:</label> <select class="form-control"
+									id="showindustry" name="showindustry" disabled>
+									<option value="">-请选择-</option>
+									<c:forEach items="${industryinfo }" var="row">
+										<option value="${row.dict_id }"
+											<c:if test="${row.dict_id==industry }">selected</c:if>>
+											${row.dict_item_name}</option>
+									</c:forEach>
+								</select>
+							</div>
+							<div class="form-group form-inline">
+								<label for="showposition">当前职位:</label> <input type="text"
+									class="form-control"
+									name="showposition" id="showposition">
+							</div>
+							<div class="tagsinput-primary form-group">
+								<label for="showtag">个人标签:</label> <input name="showtagsinput"
+									id="showtagsinput" class="tagsinput" data-role="tagsinput"
+									value="  " placeholder="输入后回车" />
+							</div>
+							<button type="button" class="btn btn-primary"
+								onclick="basicinformationformsubmit()">保存</button>
+						</form>
+						</div>
+						<div class="condense_panel">
+								<form id="basicinformationform">
+							<div class="form-group">
+								<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;性别:</label>
+								<div class="radio-inline">
+									<label> <input type="radio" name="genderoptions"
+										id="gender0" value="secret">保密
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label> <input type="radio" name="genderoptions"
+										id="gender1" value="male" checked>男
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label> <input type="radio" name="genderoptions"
+										id="gender2" value="female">女
+									</label>
+								</div>
+							</div>
+							<div class="form-group form-inline">
+								<div class="membder-background addMemo-body">
+									<div class="addMemo" id="iframe">
+										<label>出生日期:</label><input class="form-control" type="text"
+											 name="birthday" id="J-xl" />
 										<div class="clear-both"></div>
 										<iframe src="<%=basePath%>html/iframe.jsp" width="100%"
 											height="600" id="iframepage" name="iframe" frameborder="0"
@@ -223,8 +288,7 @@
 							</div>
 							<div class="form-group form-inline">
 								<label for="introduce">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;简介:</label>
-								<input name="introduce" type="text" id="introduce"<%if (basicinfo != null) {%>
-											value="<%=basicinfo.getIntroduce()%>"<%} %>
+								<input name="introduce" type="text" id="introduce"
 									class="form-control" placeholder="一句话介绍一下自己吧，让别人更了解你"
 									style="min-width: 358px;" />
 							</div>
@@ -240,20 +304,19 @@
 								</select>
 							</div>
 							<div class="form-group form-inline">
-								<label for="position">当前职位:</label> <input type="text"<%if (basicinfo != null) {%>
-											value="<%=basicinfo.getPosition()%>"<%}%>
-									class="form-control" name="position" id="position">
+								<label for="position">当前职位:</label> <input type="text"
+									class="form-control"
+									name="position" id="position">
 							</div>
 							<div class="tagsinput-primary form-group">
 								<label for="tag">个人标签:</label> <input name="tagsinput"
 									id="tagsinput" class="tagsinput" data-role="tagsinput"
-									<%if (basicinfo != null) {%>
-											value="<%=basicinfo.getPersonallabels()%>"<%} else {%>
-											value="互联网,社区居民" <%}%> placeholder="输入后回车" />
+									value="互联网,社区居民" placeholder="输入后回车" />
 							</div>
 							<button type="button" class="btn btn-primary"
 								onclick="basicinformationformsubmit()">保存</button>
 						</form>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -266,37 +329,50 @@
 		$("#J-xl").click(function() {
 			iframe.fadeIn();
 		});
-
-		//if(basicinformation!=null){
-<%-- 			var data="<%=basicinfo.getAddress()%>"; --%>
-// 			var address=data.split("/");
-			var data="中国/广西/南宁";
-			var address=data.split("/");
-			console.log(address[0]);
-			console.log(address[1]);
-			console.log(address[2]);
-			set_select_checked("country",address[0]);
-			set_select_checked("province",address[1]);
-			set_select_checked("city",address[2]);
-			var industryinfo="<%=basicinfo.getIndustry()%>";
-			set_select_checked("industry",industryinfo);
-// 		}
-		
-		/** 
-		* 设置select控件选中 
-		* @param selectId select的id值 
-		* @param checkValue 选中option的值 
-		*/  
-		function set_select_checked(selectId, checkValue){ 
-			var select = document.getElementById(selectId);  
-			for (var i = 0; i < select.options.length; i++){
-				if (select.options[i].value == checkValue){  
-					select.options[i].selected = true;
-					break; 
-				}  
-			}  
-		}
+		init_show('<%=userinfo.getUsername()%>');
 	});
+	function init_show(username){
+		$.ajax({
+	    	type:"POST",
+	        url:"<%=basePath%>bbs/getbasicinformation.action",
+	    	data:{"username":username},
+	    	success:function(data){
+	    		if(data!=null){
+	    			if ("secret"==data.gender) {
+						$("#gender0").prop("checked", true);
+						$("#gender1").prop("checked", false);
+						$("#gender2").prop("checked", false);
+					}else
+					if ("male"==data.gender) {
+						$("#gender0").prop("checked", false);
+						$("#gender1").prop("checked", true);
+						$("#gender2").prop("checked", false);
+					}else
+					if ("female"==data.gender) {
+						$("#gender0").prop("checked", false);
+						$("#gender1").prop("checked", false);
+						$("#gender2").prop("checked", true);
+					}else{
+						$("#gender0").prop("checked", false);
+						$("#gender1").prop("checked", true);
+						$("#gender2").prop("checked", false);
+					}
+					var birthday = data.birthday;
+					$("#showJ-xl").val(birthday);
+					var address =data.address?data.address.split("/"):'';
+					$("#country").val(address[0]);
+					$("#province").val(address[1]);
+					$("#city").val(address[2]);
+					$("#introduce").val(data.introduce);
+					$("#industry").val(data.industry);
+					$("#tagsinput").val(data.personallabels);
+	    			$(".condense_panel").eq(1).addClass("showorhide").siblings().removeClass("showorhide");
+	    		}else{
+	    			$(".condense_panel").eq(0).addClass("showorhide").siblings().removeClass("showorhide");
+	    		}
+	    	}
+	    });
+	}
 </script>
 <script type="text/javascript">
 	var areaObj = [];
@@ -396,33 +472,13 @@
 			data : $("#basicinformationform").serialize(),
 			async : false,
 			success : function(data) {
-				if ("secret"==data.gender) {
-					$("#gender0").prop("checked", true);
-					$("#gender1").prop("checked", false);
-					$("#gender2").prop("checked", false);
+				if(data==OK){
+					alert("保存修改成功！");
+					window.loacation.reload();
 				}
-				if ("male"==data.gender) {
-					$("#gender0").prop("checked", false);
-					$("#gender1").prop("checked", true);
-					$("#gender2").prop("checked", false);
-				}
-				if ("female"==data.gender) {
-					$("#gender0").prop("checked", false);
-					$("#gender1").prop("checked", false);
-					$("#gender2").prop("checked", true);
-				}
-				var birthday = data.birthday;
-				$("#J-xl").val(birthday);
-				var address = data.address.split("/");
-				$("#country").val(address[0]);
-				$("#province").val(address[1]);
-				$("#city").val(address[2]);
-				$("#introduce").val(data.introduce);
-				$("#industry").val(data.industry);
-				$("#tagsinput").val(data.personallabels);
-				alert("保存修改成功！");
 			}
 		});
 	}
+
 </script>
 </html>
