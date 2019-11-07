@@ -54,12 +54,8 @@ public class EducationInformationController {
 	}
 	@RequestMapping("/bbs/getEducationInformation.action")
 	@ResponseBody
-	public String saveEducationInformation(String username){
+	public EducationInformation saveEducationInformation(String username){
 		EducationInformation educationinfo=educationInformationService.selectEducationInformation(username);
-		if(educationinfo!=null){
-			return "OK";
-		}else{
-			return "FAIL";
-		}
+		return educationinfo;
 	}
 }
