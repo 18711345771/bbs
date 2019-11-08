@@ -184,41 +184,36 @@
 							<div class="form-group">
 								<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;性别:</label>
 								<div class="radio-inline">
-									<label> <input type="radio" name="genderoptions"
-										id="showgender0" value="secret">保密
+									<label> <input type="radio"
+										id="showgender0" value="secret" disabled>保密 
 									</label>
 								</div>
 								<div class="radio-inline">
-									<label> <input type="radio" name="genderoptions"
-										id="showgender1" value="male" checked>男
+									<label> <input type="radio"
+										id="showgender1" value="male" checked disabled>男
 									</label>
 								</div>
 								<div class="radio-inline">
-									<label> <input type="radio" name="genderoptions"
-										id="showgender2" value="female">女
+									<label> <input type="radio"
+										id="showgender2" value="female" disabled>女
 									</label>
 								</div>
 							</div>
 							<div class="form-group form-inline">
-								<div class="membder-background addMemo-body">
-									<div class="addMemo" id="iframe">
 										<label>出生日期:</label><input class="form-control" type="text"
-											 name="birthday" id="showJ-xl" readonly>
-										<div class="clear-both"></div>
-									</div>
-								</div>
+											name="birthday"  id="showJ-xl" readonly>
 							</div>
-							<div class="form-group">
+							<div class="form-group form-inline">
 								<label>现居住地:</label> <input id="showcountry" name="showcountry"
-									class="dept_select" readonly><input id="showprovince"
-									name="showprovince" class="dept_select"readonly><input id="showcity"
-									name="showcity" class="dept_select"readonly>
+									class="dept_select form-control" readonly><input id="showprovince"
+									name="showprovince" class="dept_select form-control"readonly><input id="showcity"
+									name="showcity" class="dept_select form-control"readonly>
 							</div>
 							<div class="form-group form-inline">
 								<label for="showintroduce">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;简介:</label>
 								<input name="showintroduce" type="text" id="showintroduce"
 									class="form-control" placeholder="一句话介绍一下自己吧，让别人更了解你"
-									style="min-width: 358px;" />
+									style="min-width: 358px;" readonly/>
 							</div>
 							<div class="form-group form-inline">
 								<label for="showindustry">行业分类:</label> <select class="form-control"
@@ -238,7 +233,7 @@
 							</div>
 							<div class="tagsinput-primary form-group">
 								<label for="showtag">个人标签:</label> <input name="showtagsinput"
-									id="showtagsinput" class="tagsinput" data-role="tagsinput"
+									id="showtagsinput" class="form-control"
 									placeholder="输入后回车" readonly/>
 							</div>
 							<button type="button" class="btn btn-primary"
@@ -269,7 +264,7 @@
 								<div class="membder-background addMemo-body">
 									<div class="addMemo" id="iframe">
 										<label>出生日期:</label><input class="form-control" type="text"
-											 name="birthday" id="J-xl" value="1992-10-13"/>
+											value="2019-9-27" id="J-xl" />
 										<div class="clear-both"></div>
 										<iframe src="<%=basePath%>html/iframe.jsp" width="100%"
 											height="600" id="iframepage" name="iframe" frameborder="0"
@@ -322,13 +317,13 @@
 	</div>
 </body>
 <script type="text/javascript">
-	$(document).ready(function() {
+	window.onload=function() {
 		var iframe = $("#iframepage").hide();
 		$("#J-xl").click(function() {
 			iframe.fadeIn();
 		});
 		init_show('<%=userinfo.getUsername()%>');
-	});
+	};
 	function init_show(username){
 		$.ajax({
 	    	type:"POST",
@@ -357,12 +352,15 @@
 					}
 					var birthday = data.birthday;
 					$("#showJ-xl").val(birthday);
-					var address =data.address?data.address.split("/"):'';
-					$("#showcountry").val(address[0]);
-					$("#showprovince").val(address[1]);
-					$("#showcity").val(address[2]);
+					var addresscountry =data.address?data.address.split("/")[0]:'';
+					var addressprovince =data.address?data.address.split("/")[1]:'';
+					var addresscity =data.address?data.address.split("/")[2]:'';
+					$("#showcountry").val(addresscountry);
+					$("#showprovince").val(addressprovince);
+					$("#showcity").val(addresscity);
 					$("#showintroduce").val(data.introduce);
 					$("#showindustry").val(data.industry);
+					$("#showposition").val(data.position);
 					$("#showtagsinput").val(data.personallabels);
 	    			$(".condense_panel").eq(1).addClass("showorhide").siblings().removeClass("showorhide");
 	    		}else{
@@ -471,27 +469,25 @@
 		}
 	}
 	function basicinformationformsubmit(){
-		var gender=document.getElementsByName("genderoptions");
+		var gender=$("input[name='genderoptions']:checked").val();
 		console.log(gender);
+		alert(gender);
 		$.ajax({
 			type:"POST",
 			url:"<%=basePath%>bbs/savebasicinformation.action",
-			async:false,
-			data:$("basicinformationform").serialize(),
-// 			data:JSON.stringify({
-// 				"username":$("#userName").val(),
-// 				"gender":gender,
-// 				"birthday":$("#J-xl").val(),
-// 				"country":$("#country").val(),
-// 				"province":$("#province").val(),
-// 				"city":$("#city").val(),
-// 				"introduce":$("#introduce").val(),
-// 				"industry":$("#industry").val(),
-// 				"position":$("#position").val(),
-// 				"personallabels":$("#tagsinput").val()
-// 			}),
+			data:{
+				"genderoptions":gender,
+				"birthday":$("#J-xl").val(),
+				"country":$("#country").val(),
+				"province":$("#province").val(),
+				"city":$("#city").val(),
+				"introduce":$("#introduce").val(),
+				"industry":$("#industry").val(),
+				"position":$("#position").val(),
+				"personallabels":$("#tagsinput").val()
+			},
 			success : function(data) {
-				if(data==OK){
+				if(data=="OK"){
 					alert("保存修改成功！");
 					window.loacation.reload();
 				}
