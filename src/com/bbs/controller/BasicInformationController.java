@@ -24,38 +24,44 @@ public class BasicInformationController {
 
 	@RequestMapping("/bbs/savebasicinformation.action")
 	@ResponseBody
-	public String uploadBasicInformation(@RequestParam("userName") String username,
-			@RequestParam("genderoptions") String gender, @RequestParam("birthday") String birthday,
-			@RequestParam("country") String country, @RequestParam("province") String province,
-			@RequestParam("city") String city, @RequestParam("introduce") String introduce,
-			@RequestParam("industry") String industry, @RequestParam("position") String position,
-			@RequestParam("tagsinput") String personallabels) {
+	public String uploadBasicInformation(
+			String genderoptions, String birthday,
+			String country,String province,
+			String city,String introduce,
+			String industry,String position,
+			String personallabels,HttpServletRequest req) {
 
-		System.out.println(city);
+		//System.out.println(city);
 
 		BasicInformation basicInformation = new BasicInformation();
+		User userTemp=(User) req.getSession().getAttribute("UserInfo");
 		User user = new User();
-		user = userService.selectUserByUsername(username);
+		user = userService.selectUserByUsername(userTemp.getUsername());
 		Integer userId = user.getId();
 
 		basicInformation.setUserId(userId);
-		basicInformation.setUsername(username);
-		basicInformation.setGender(gender);
+		basicInformation.setUsername(userTemp.getUsername());
+		basicInformation.setGender(genderoptions);
 		basicInformation.setIntroduce(introduce);
 		basicInformation.setIndustry(industry);
 		basicInformation.setPosition(position);
 		basicInformation.setPersonallabels(personallabels);
-		if (birthday.indexOf("00 ")>0) {
-			birthday = birthday.substring(0, birthday.indexOf("00"));
-		}
+//		if (birthday.indexOf("00 ")>0) {
+//			birthday = birthday.substring(0, birthday.indexOf("00"));
+//		}
 		basicInformation.setBirthday(birthday);
 
 		// ·â×°µØÖ·
-		String address = country + "/" + province + "/" + city;
+		String address = null;
+		if("0".equals(province)){
+			address = country + "/" + "---" + "/" + city;
+		}else{
+			address = country + "/" + province + "/" + city;
+		}
 		basicInformation.setAddress(address);
 
 		BasicInformation basicInformationTemp = new BasicInformation();
-		basicInformationTemp = basicInformationService.selectBasicInformation(username);
+		basicInformationTemp = basicInformationService.selectBasicInformation(userTemp.getUsername());
 		if (basicInformationTemp != null) {
 			basicInformationService.updateBasicInformation(basicInformation);
 		} else {
