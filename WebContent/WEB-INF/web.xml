@@ -24,7 +24,7 @@
     <url-pattern>*.action</url-pattern>
   </filter-mapping>
   <servlet>
-    <servlet-name>LinkedSelector</servlet-name>
+    <servlet-name>bbs</servlet-name>
     <servlet-class>
 			org.springframework.web.servlet.DispatcherServlet
 		</servlet-class>
@@ -35,10 +35,10 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-    <servlet-name>LinkedSelector</servlet-name>
+    <servlet-name>bbs</servlet-name>
     <url-pattern>*.action</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
-    <welcome-file>linkedselector.action</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
 </web-app>
