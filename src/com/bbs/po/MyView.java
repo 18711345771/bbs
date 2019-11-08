@@ -4,10 +4,10 @@ import java.util.Date;
 
 public class MyView {
 	private Integer id;//自增的id
-	private Integer view_id;//回复的帖子的id
+	private Integer view_id;//浏览的帖子的id
 	private String writer;//本主的名字（作为外键）
 	private String  view_title;
-	private Integer view_viewcount;//回复的帖子的viewcount
+	private Integer view_viewcount;//浏览的帖子的viewcount
 	private Integer view_replycount;
 	private String view_editorNo;
 	private Date view_datetime;
