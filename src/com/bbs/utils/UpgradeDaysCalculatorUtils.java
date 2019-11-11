@@ -13,30 +13,30 @@ public class UpgradeDaysCalculatorUtils {
 	    private static List<Map.Entry<String,Integer>> list ;
 	    private static void init(){
 	    	map=new TreeMap<String,Integer>();
-	    	map.put("LV1", 0);
-	    	map.put("LV4", 60);
-	    	map.put("LV8", 196);
-	    	map.put("LV12", 396);
-	    	map.put("LV18", 816);
-	    	map.put("LV22", 1176);
-	    	map.put("LV26", 1600);
-	    	map.put("LV30", 2088);
-	    	map.put("LV35", 2788);
-	    	map.put("LV38", 3256);
-	    	map.put("LV42", 3936);
-	    	map.put("LV46", 4680);
-	    	map.put("LV52", 5916);
-	    	map.put("LV56", 6820);
-	    	map.put("LV60", 7788);
-	    	map.put("LV65", 9088);
-	    	map.put("LV68", 9916);
-	    	map.put("LV72", 11076);
-	    	map.put("LV76", 12300);
-	    	map.put("LV80", 13588);
-	    	map.put("LV86", 15640);
-	    	map.put("LV90", 17088);
-	    	map.put("LV94", 18600);
-	    	map.put("LV98",20176);
+	    	map.put("1", 0);
+	    	map.put("4", 60);
+	    	map.put("8", 196);
+	    	map.put("12", 396);
+	    	map.put("18", 816);
+	    	map.put("22", 1176);
+	    	map.put("26", 1600);
+	    	map.put("30", 2088);
+	    	map.put("35", 2788);
+	    	map.put("38", 3256);
+	    	map.put("42", 3936);
+	    	map.put("46", 4680);
+	    	map.put("52", 5916);
+	    	map.put("56", 6820);
+	    	map.put("60", 7788);
+	    	map.put("65", 9088);
+	    	map.put("68", 9916);
+	    	map.put("72", 11076);
+	    	map.put("76", 12300);
+	    	map.put("80", 13588);
+	    	map.put("86", 15640);
+	    	map.put("90", 17088);
+	    	map.put("94", 18600);
+	    	map.put("98",20176);
 	    	
 	    	/**
 	    	 * 根据TreeMap的value来进行排序
