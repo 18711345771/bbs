@@ -138,13 +138,16 @@ public class UserController {
 					Calendar calendar2 = Calendar.getInstance();
 					calendar2.setTime(experience.getRecentTime());
 					// 如果当前时间与t_experience表中recentTime字段的值不是同一天，就将活跃天数增加1
-					System.out.println(
-							"1---" + calendar1.get(Calendar.YEAR) + "---" + calendar2.get(Calendar.YEAR) + "  2---"
-									+ (calendar1.get(Calendar.MONTH) + 1) + "---" + (calendar2.get(Calendar.MONTH) + 1)
-									+ "  3---" + calendar1.get(Calendar.DATE) + "---" + calendar2.get(Calendar.DATE));
-					if (!(calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR)
+					// System.out.println(
+					// "1---" + calendar1.get(Calendar.YEAR) + "---" +
+					// calendar2.get(Calendar.YEAR) + " 2---"
+					// + (calendar1.get(Calendar.MONTH) + 1) + "---" +
+					// (calendar2.get(Calendar.MONTH) + 1)
+					// + " 3---" + calendar1.get(Calendar.DATE) + "---" +
+					// calendar2.get(Calendar.DATE));
+					if (!((calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR)
 							&& (calendar1.get(Calendar.MONTH) + 1) == (calendar2.get(Calendar.MONTH) + 1)
-							&& calendar1.get(Calendar.DATE) == calendar2.get(Calendar.DATE))) {
+							&& calendar1.get(Calendar.DATE) == calendar2.get(Calendar.DATE)))) {
 						experience.setDynamicDays(experience.getDynamicDays() + 1);
 					}
 				}
@@ -363,7 +366,10 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/bbs/ExperienceValue.action")
-	public String toExperienceValue() {
+	public String toExperienceValue(HttpServletRequest req, Model model) {
+		User user = (User) req.getSession().getAttribute("UserInfo");
+		Experience experience = experienceService.selectExperienceByuserName(user.getUsername());
+		model.addAttribute("experience", experience);
 		return "ExperienceValue";
 	}
 
