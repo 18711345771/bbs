@@ -46,9 +46,6 @@ public class BasicInformationController {
 		basicInformation.setIndustry(industry);
 		basicInformation.setPosition(position);
 		basicInformation.setPersonallabels(personallabels);
-//		if (birthday.indexOf("00 ")>0) {
-//			birthday = birthday.substring(0, birthday.indexOf("00"));
-//		}
 		basicInformation.setBirthday(birthday);
 
 		// ·â×°µØÖ·
