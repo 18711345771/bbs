@@ -152,13 +152,13 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-lg-12">
-								<label>我的经验值:</label> <span class="">LV2</span>
+								<label>我的经验值:</label> <span class="label label-${experience.currentLevel }">LV${experience.currentLevel }</span>
 								<h6>用户经验值是用户每天登录活跃情况的体现</h6>
 								<div style="margin-left: 50px;">
-									<label>活跃天数:</label> <span>21天</span>
+									<label>活跃天数:</label> <span>${experience.dynamicDays }天</span>
 								</div>
 								<div style="margin-left: 50px;">
-									<label>升级还需:</label> <span>15天</span>
+									<label>升级还需:</label> <span>${experience.upgradeDays}天</span>
 								</div>
 								<p>
 									<label>经验值计算规则:</label>经验值是根据用户活跃天数确定的，用户只需每天登录天涯社区，就可以获得活跃天数，从而获取经验值
